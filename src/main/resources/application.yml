@@ -13,7 +13,7 @@ spring:
         - file-error-logging
         - slack-error-logging
   application:
-    name: hhplus-concert
+    name: hhplus-concert-service
   datasource:
     hikari:
       jdbc-url: jdbc:mysql://localhost:53306/concert?useUnicode=yes&characterEncoding=UTF-8&rewriteBatchedStatements=true
