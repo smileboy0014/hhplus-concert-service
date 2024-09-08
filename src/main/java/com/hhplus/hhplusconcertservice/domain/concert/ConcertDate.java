@@ -1,0 +1,28 @@
+package com.hhplus.hhplusconcertservice.domain.concert;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder(toBuilder = true)
+@Getter
+public class ConcertDate {
+
+    private Long concertDateId;
+
+    private Concert concert;
+
+    private Place place;
+
+    private Long concertId;
+
+    private Long placeId;
+
+    private String concertDate;
+
+    private Boolean isAvailable;
+
+}

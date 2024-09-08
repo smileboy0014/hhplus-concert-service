@@ -1,0 +1,9 @@
+version: '3.7'
+services:
+  redis:
+    image: redis:alpine
+    container_name: concert-msa-redis
+    command: redis-server --port 6379 --maxmemory 256mb --maxmemory-policy allkeys-lru
+    hostname: redis
+    ports:
+      - 26379:6379
