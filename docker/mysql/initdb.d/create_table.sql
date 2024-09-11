@@ -1,4 +1,10 @@
+-- concert 스키마
 CREATE DATABASE IF NOT EXISTS concert DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;;
+CREATE DATABASE IF NOT EXISTS payment DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE IF NOT EXISTS users DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE IF NOT EXISTS waiting_queue DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+
 ALTER DATABASE concert CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 
 USE concert;
@@ -87,3 +93,119 @@ CREATE TABLE IF NOT EXISTS reservation
     PRIMARY KEY (reservation_id),
     UNIQUE KEY unique_reservation (concert_id, concert_date_id, seat_number)
 ) ENGINE = InnoDB;
+
+-- outbox 테이블 생성
+CREATE TABLE IF NOT EXISTS outbox
+(
+    outbox_id   BIGINT NOT NULL AUTO_INCREMENT,
+    message_id  VARCHAR(255),
+    type        ENUM ('PAYMENT','CONCERT','USER','QUEUE'),
+    status      ENUM ('INIT','DONE','FAIL'),
+    payload     TEXT,
+    retry_count INT    NOT NULL DEFAULT 0,
+    created_at  DATETIME(6),
+    updated_at  DATETIME(6),
+    PRIMARY KEY (outbox_id)
+    ) ENGINE = InnoDB;
+
+
+--
+
+-- payment 스키마
+# CREATE DATABASE IF NOT EXISTS payment DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;;
+ ALTER DATABASE payment CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
+
+USE payment;
+
+-- payment 테이블 생성
+CREATE TABLE IF NOT EXISTS payment
+(
+    payment_id     BIGINT NOT NULL AUTO_INCREMENT,
+    reservation_id BIGINT,
+    payment_price  DECIMAL(38, 2),
+    status         ENUM ('CANCEL','WAIT','COMPLETE','REFUND'),
+    paid_at        DATETIME(6),
+    created_at     DATETIME(6),
+    updated_at     DATETIME(6),
+    PRIMARY KEY (payment_id)
+    ) ENGINE = InnoDB;
+
+-- outbox 테이블 생성
+CREATE TABLE IF NOT EXISTS outbox
+(
+    outbox_id   BIGINT NOT NULL AUTO_INCREMENT,
+    message_id  VARCHAR(255),
+    type        ENUM ('PAYMENT','CONCERT','USER','QUEUE'),
+    status      ENUM ('INIT','DONE','FAIL'),
+    payload     TEXT,
+    retry_count INT    NOT NULL DEFAULT 0,
+    created_at  DATETIME(6),
+    updated_at  DATETIME(6),
+    PRIMARY KEY (outbox_id)
+    ) ENGINE = InnoDB;
+
+--
+
+-- user 스키마
+# CREATE DATABASE IF NOT EXISTS users DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;;
+ ALTER DATABASE users CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
+
+USE users;
+
+CREATE TABLE IF NOT EXISTS users
+(
+    user_id    BIGINT NOT NULL AUTO_INCREMENT,
+    balance    DECIMAL(38, 2),
+    #     version    INT    NOT NULL,
+    created_at DATETIME(6),
+    updated_at DATETIME(6),
+    PRIMARY KEY (user_id)
+    ) ENGINE = InnoDB;
+
+-- outbox 테이블 생성
+CREATE TABLE IF NOT EXISTS outbox
+(
+    outbox_id   BIGINT NOT NULL AUTO_INCREMENT,
+    message_id  VARCHAR(255),
+    type        ENUM ('PAYMENT','CONCERT','USER','QUEUE'),
+    status      ENUM ('INIT','DONE','FAIL'),
+    payload     TEXT,
+    retry_count INT    NOT NULL DEFAULT 0,
+    created_at  DATETIME(6),
+    updated_at  DATETIME(6),
+    PRIMARY KEY (outbox_id)
+    ) ENGINE = InnoDB;
+
+--
+
+-- waiting_queue 스키마
+# CREATE DATABASE IF NOT EXISTS waiting_queue DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;;
+ ALTER DATABASE waiting_queue CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
+
+USE waiting_queue;
+
+-- waiting_queue 테이블 생성
+CREATE TABLE IF NOT EXISTS waiting_queue
+(
+    waiting_queue_id BIGINT NOT NULL AUTO_INCREMENT,
+    user_id          BIGINT,
+    token            VARCHAR(255),
+    status           ENUM ('WAIT','ACTIVE','EXPIRED'),
+    request_time     DATETIME(6),
+    active_time      DATETIME(6),
+    PRIMARY KEY (waiting_queue_id)
+    ) ENGINE = InnoDB;
+
+-- outbox 테이블 생성
+CREATE TABLE IF NOT EXISTS outbox
+(
+    outbox_id   BIGINT NOT NULL AUTO_INCREMENT,
+    message_id  VARCHAR(255),
+    type        ENUM ('PAYMENT','CONCERT','USER','QUEUE'),
+    status      ENUM ('INIT','DONE','FAIL'),
+    payload     TEXT,
+    retry_count INT    NOT NULL DEFAULT 0,
+    created_at  DATETIME(6),
+    updated_at  DATETIME(6),
+    PRIMARY KEY (outbox_id)
+    ) ENGINE = InnoDB;
