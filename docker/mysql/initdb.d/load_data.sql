@@ -73,3 +73,17 @@ VALUES
     (@last_concert_date_id, 48, 190000, 'S', 'AVAILABLE', NOW(), NOW()),
     (@last_concert_date_id, 49, 190000, 'S', 'AVAILABLE', NOW(), NOW()),
     (@last_concert_date_id, 50, 190000, 'S', 'AVAILABLE', NOW(), NOW());
+
+USE users;
+
+INSERT INTO users (balance, created_at, updated_at)
+VALUES (0, NOW(), NOW()),
+       (0, NOW(), NOW()),
+       (0, NOW(), NOW()),
+       (0, NOW(), NOW()),
+       (0, NOW(), NOW()),
+       (0, NOW(), NOW()),
+       (0, NOW(), NOW()),
+       (0, NOW(), NOW()),
+       (0, NOW(), NOW()),
+       (0, NOW(), NOW());
