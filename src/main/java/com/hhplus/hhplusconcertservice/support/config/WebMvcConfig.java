@@ -30,7 +30,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
             "/**/api-docs/**",
             "/**/v1/users/**",
             "/**/v1/queues/**",
-            "/**/v1/payments/pay/*/status"
+            "/**/v1/payments/pay/*/status",
+            "/**/healthCheck"
     );
 
     @Override
