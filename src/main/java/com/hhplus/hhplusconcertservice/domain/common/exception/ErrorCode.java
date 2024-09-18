@@ -70,7 +70,10 @@ public enum ErrorCode {
     OUTBOX_IS_NOT_INIT_STATUS("outbox 데이터가 초기 상태가 아닙니다."),
 
     // kafka 관련
-    KAFKA_PUBLISH_FAILED("kafka 메시지 발행에 실패하였습니다");
+    KAFKA_PUBLISH_FAILED("kafka 메시지 발행에 실패하였습니다"),
+
+    //push 관련
+    KAKAO_PUSH_FAILED("카카오 메세지 발행에 실패하였습니다");
 
 
     private final String msg;

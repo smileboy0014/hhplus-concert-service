@@ -1,4 +1,4 @@
-package com.hhplus.hhplusconcertservice.infra;
+package com.hhplus.hhplusconcertservice.infra.concert;
 
 
 import com.hhplus.hhplusconcertservice.domain.concert.Concert;

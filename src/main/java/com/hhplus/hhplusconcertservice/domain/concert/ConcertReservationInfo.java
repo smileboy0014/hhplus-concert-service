@@ -59,6 +59,12 @@ public class ConcertReservationInfo implements Serializable {
         this.reservedAt = now();
     }
 
+    public void fail() {
+
+        this.status = ReservationStatus.TEMPORARY_RESERVED;
+        this.reservedAt = now();
+    }
+
     public void cancel() {
         if (status == ReservationStatus.TEMPORARY_RESERVED
                 || status == ReservationStatus.COMPLETED) {

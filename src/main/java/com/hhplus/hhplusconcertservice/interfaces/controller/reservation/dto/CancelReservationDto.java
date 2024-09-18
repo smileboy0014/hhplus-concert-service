@@ -12,8 +12,5 @@ public class CancelReservationDto {
         public ReservationCommand.Delete toDeleteCommand(Long reservationId) {
             return new ReservationCommand.Delete(reservationId, userId);
         }
-
-
     }
-
 }

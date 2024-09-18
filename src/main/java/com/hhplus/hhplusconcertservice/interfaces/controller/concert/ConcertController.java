@@ -1,5 +1,9 @@
 package com.hhplus.hhplusconcertservice.interfaces.controller.concert;
 
+import com.hhplus.hhplusconcertservice.domain.client.PushClient;
+import com.hhplus.hhplusconcertservice.domain.client.dto.PushDto;
+import com.hhplus.hhplusconcertservice.domain.common.exception.CustomException;
+import com.hhplus.hhplusconcertservice.domain.common.exception.ErrorCode;
 import com.hhplus.hhplusconcertservice.domain.concert.ConcertService;
 import com.hhplus.hhplusconcertservice.interfaces.common.dto.ApiResultResponse;
 import com.hhplus.hhplusconcertservice.interfaces.controller.concert.dto.ConcertDateDto;
@@ -13,18 +17,26 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreaker;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.hhplus.hhplusconcertservice.domain.common.exception.ErrorCode.KAKAO_PUSH_FAILED;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/concerts")
+@Slf4j
 public class ConcertController {
 
     private final ConcertService concertService;
+    private final PushClient pushClient;
+    private final CircuitBreakerFactory circuitBreakerFactory;
 
     /**
      * 콘서트 목록 조회
@@ -100,6 +112,4 @@ public class ConcertController {
                         .toList());
 
     }
-
-
 }

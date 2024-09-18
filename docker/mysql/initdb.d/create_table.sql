@@ -99,7 +99,6 @@ CREATE TABLE IF NOT EXISTS outbox
 (
     outbox_id   BIGINT NOT NULL AUTO_INCREMENT,
     message_id  VARCHAR(255),
-    type        ENUM ('PAYMENT','CONCERT','USER','QUEUE'),
     status      ENUM ('INIT','DONE','FAIL'),
     payload     TEXT,
     retry_count INT    NOT NULL DEFAULT 0,
@@ -123,7 +122,7 @@ CREATE TABLE IF NOT EXISTS payment
     payment_id     BIGINT NOT NULL AUTO_INCREMENT,
     reservation_id BIGINT,
     payment_price  DECIMAL(38, 2),
-    status         ENUM ('CANCEL','WAIT','COMPLETE','REFUND'),
+    status         ENUM ('PENDING','COMPLETE','CANCEL','REFUND'),
     paid_at        DATETIME(6),
     created_at     DATETIME(6),
     updated_at     DATETIME(6),
@@ -135,7 +134,6 @@ CREATE TABLE IF NOT EXISTS outbox
 (
     outbox_id   BIGINT NOT NULL AUTO_INCREMENT,
     message_id  VARCHAR(255),
-    type        ENUM ('PAYMENT','CONCERT','USER','QUEUE'),
     status      ENUM ('INIT','DONE','FAIL'),
     payload     TEXT,
     retry_count INT    NOT NULL DEFAULT 0,
@@ -167,7 +165,6 @@ CREATE TABLE IF NOT EXISTS outbox
 (
     outbox_id   BIGINT NOT NULL AUTO_INCREMENT,
     message_id  VARCHAR(255),
-    type        ENUM ('PAYMENT','CONCERT','USER','QUEUE'),
     status      ENUM ('INIT','DONE','FAIL'),
     payload     TEXT,
     retry_count INT    NOT NULL DEFAULT 0,
@@ -201,7 +198,6 @@ CREATE TABLE IF NOT EXISTS outbox
 (
     outbox_id   BIGINT NOT NULL AUTO_INCREMENT,
     message_id  VARCHAR(255),
-    type        ENUM ('PAYMENT','CONCERT','USER','QUEUE'),
     status      ENUM ('INIT','DONE','FAIL'),
     payload     TEXT,
     retry_count INT    NOT NULL DEFAULT 0,

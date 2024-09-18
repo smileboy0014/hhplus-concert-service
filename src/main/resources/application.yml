@@ -36,7 +36,7 @@ spring:
   kafka:
     bootstrap-servers: localhost:9092
     consumer:
-      group-id: hhplus-01
+      group-id: hhplus-concert
 
 server:
   servlet:
@@ -52,6 +52,27 @@ logging:
 
 jwt:
   secret-key: hhplusConcertSecretKeyForAuthenticationJwtToken
+
+push:
+  service:
+    url: localhost:8085/api/v1
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      pushServiceCircuitBreaker:
+        failure-rate-threshold: 10   # 실패 10% 이상 시 서킷 오픈
+        slow-call-duration-threshold: 1000   # 1000ms 이상 소요 시 실패로 간주
+        slow-call-rate-threshold: 10   # slowCallDurationThreshold 초과 비율이 10% 이상 시 서킷 오픈
+        wait-duration-in-open-state: 30000   # OPEN -> HALF-OPEN 전환 전 기다리는 시간
+        minimum-number-of-calls: 50   # 집계에 필요한 최소 호출 수
+        sliding-window-size: 100   # 서킷 CLOSE 상태에서 N회 호출 도달 시 failureRateThreshold 실패 비율 계산
+        permitted-number-of-calls-in-half-open-state: 30   # HALFOPEN -> CLOSE or OPEN 으로 판단하기 위해 호출 횟수
+  retry:
+    instances:
+      pushServiceRetry:
+        maxAttempts: 3            # 최대 3번 재시도
+        waitDuration: 2s          # 각 재시도 사이의 대기 시간 (2초)
 ---
 spring:
   config:
@@ -59,10 +80,10 @@ spring:
       on-profile: dev
   datasource:
     hikari:
-      jdbc-url: jdbc:mysql://localhost:53306/concert?useUnicode=yes&characterEncoding=UTF-8&rewriteBatchedStatements=true
+      jdbc-url: jdbc:mysql://database-hhplus.cxyqk8cmu4tk.us-east-1.rds.amazonaws.com/concert
       driver-class-name: com.mysql.cj.jdbc.Driver
       username: root
-      password: 1234
+      password: hhplus123
   jpa:
     database: mysql
     hibernate:
@@ -72,6 +93,14 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
         default_batch_fetch_size: 500
+  data:
+    redis:
+      host: redis-cluster.1i6zcb.ng.0001.use1.cache.amazonaws.com
+      port: 6379
+  kafka:
+    bootstrap-servers: b-2.clusterhhplus.vt4p8v.c18.kafka.us-east-1.amazonaws.com:9092
+    consumer:
+      group-id: hhplus-concert
 
 logging:
   level:

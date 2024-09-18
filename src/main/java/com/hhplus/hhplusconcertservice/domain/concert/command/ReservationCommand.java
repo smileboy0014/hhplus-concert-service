@@ -3,6 +3,9 @@ package com.hhplus.hhplusconcertservice.domain.concert.command;
 import com.hhplus.hhplusconcertservice.domain.concert.ConcertDate;
 import com.hhplus.hhplusconcertservice.domain.concert.ConcertReservationInfo;
 import com.hhplus.hhplusconcertservice.domain.concert.Seat;
+import com.hhplus.hhplusconcertservice.domain.concert.event.PaymentEvent;
+
+import java.math.BigDecimal;
 
 public class ReservationCommand {
     public record Create(
@@ -35,7 +38,16 @@ public class ReservationCommand {
     }
 
     public record Complete(
-            Long reservationId
+            String reservationId,
+            String paymentId,
+            String userId,
+            String token,
+            BigDecimal amount
     ) {
+
+        public static ReservationCommand.Complete toCommand(PaymentEvent event) {
+            return new ReservationCommand.Complete(event.getReservationId(), event.getPaymentId(),
+                    event.getUserId(), event.getToken(), event.getAmount());
+        }
     }
 }

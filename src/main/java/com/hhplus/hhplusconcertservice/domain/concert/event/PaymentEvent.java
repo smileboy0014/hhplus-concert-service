@@ -1,10 +1,15 @@
 package com.hhplus.hhplusconcertservice.domain.concert.event;
 
-import com.hhplus.hhplusconcertservice.domain.concert.ConcertReservationInfo;
+import com.hhplus.hhplusconcertservice.domain.outbox.Outbox;
+import com.hhplus.hhplusconcertservice.domain.outbox.command.OutboxCommand;
+import com.hhplus.hhplusconcertservice.support.utils.JsonUtils;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.context.ApplicationEvent;
+
+import java.math.BigDecimal;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -15,17 +20,39 @@ public class PaymentEvent extends ApplicationEvent {
         super("");
     }
 
-
-    private ConcertReservationInfo reservationInfo;
+    private String reservationId;
     private String messageId;
     private String paymentId;
+    private String userId;
     private String token;
+    private BigDecimal amount;
+    private String status;
 
-    public PaymentEvent(Object source, ConcertReservationInfo reservationInfo,
-                        String paymentId, String token) {
+    public PaymentEvent(Object source, String reservationId, String userId,
+                        String paymentId, String token, BigDecimal amount, String status) {
         super(source);
-        this.reservationInfo = reservationInfo;
+        this.reservationId = reservationId;
         this.paymentId = paymentId;
+        this.userId = userId;
         this.token = token;
+        this.amount = amount;
+        this.status = status;
+    }
+
+    public OutboxCommand.Create toOutboxCommand() {
+        String uuid = UUID.randomUUID().toString();
+        this.messageId = uuid;
+
+        return new OutboxCommand.Create(uuid, Outbox.EventStatus.INIT, JsonUtils.toJson(this));
+    }
+
+    public static class EventConstants {
+        public static final String NEW = "new";
+        public static final String RESERVATION_COMPLETED = "reservation-completed";
+        public static final String RESERVATION_FAILED = "reservation-failed";
+        public static final String DEDUCTION_COMPLETED = "deduction-completed";
+        public static final String DEDUCTION_FAILED = "deduction-failed";
+        public static final String TOKEN_EXPIRED = "token-expired";
+        public static final String TOKEN_FAILED = "token-failed";
     }
 }
