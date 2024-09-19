@@ -1,0 +1,22 @@
+version: '2'
+services:
+  zookeeper:
+    image: zookeeper:3.6
+    ports:
+      - "2181:2181"
+  kafka:
+    image: wurstmeister/kafka
+    ports:
+      - "9092:9092"  # 로컬 접근용 포트
+      - "9093:9093"  # Docker 네트워크 접근용 포트
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT_LOCAL://localhost:9092,PLAINTEXT_DOCKER://host.docker.internal:9093 # 리스너 이름 변경
+      KAFKA_LISTENERS: PLAINTEXT_LOCAL://0.0.0.0:9092,PLAINTEXT_DOCKER://0.0.0.0:9093 # 각 리스너에 다른 포트 지정
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_BROKER_ID: 1
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT_LOCAL:PLAINTEXT,PLAINTEXT_DOCKER:PLAINTEXT # 리스너 이름과 프로토콜 매핑
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT_DOCKER  # 브로커 간 통신에 사용할 리스너
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - zookeeper
